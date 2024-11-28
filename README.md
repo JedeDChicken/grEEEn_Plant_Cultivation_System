@@ -2,6 +2,8 @@
 
 *Check the Web App here- https://projectgreeen.github.io/Dashboard/
 
+*STM32F411RE
+
 *This is actually the AM2320 (Temperature Sensor) and Web App Source Code- since they were my contributions
 
 *Web App Source Code at Web App folder

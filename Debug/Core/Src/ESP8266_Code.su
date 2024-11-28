@@ -1,0 +1,4 @@
+../Core/Src/ESP8266_Code.c:14:6:bufclr	24	static
+../Core/Src/ESP8266_Code.c:21:6:ESP_Init	96	static
+../Core/Src/ESP8266_Code.c:61:6:ESP_Send_Data	168	static
+../Core/Src/ESP8266_Code.c:88:6:ESP_Send_Multi	784	static

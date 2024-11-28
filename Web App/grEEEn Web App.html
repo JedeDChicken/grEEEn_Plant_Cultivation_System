@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>grEEEn Web</title>
+<style>
+  .bg {
+    background-image: url("Golden Pothos BG.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+</style>
+</head>
+
+
+<body style="background-color: #b7cdb8;">
+
+
+<p style="font-family: arial black; font-size:500%; text-align: center; position: relative; top: -0.5em;">
+<img src="https://i.ibb.co/sqcxFXJ/Golden-Pothos.png" alt="Golden Pothos.png" width="153.6" height="153.6"">
+
+gr<span style="color: #5370fd;">E</span><span style="color: #f40600;">E</span><span style="color: #4f8c46;">E</span>n
+</p>
+
+<p style="font-family: arial; font-size: 120%; text-align: center;">
+<strong><i>Epipremnum aureum</i> (Golden Pothos) Requirements: </strong><br>
+1. Light: >200ft-c (high-light areas), 75-200ft-c (med.-light), 25-75ft-c (low-light) <br>
+2. Temperature: 65degF (night), 75degF (day) <br>
+3. Relative Humidity: 25-49% <br>
+4. Water: when surface is dry (every 1-2 weeks) <br>
+
+<br><br>
+<style>
+hr {color: white; border-style: solid;}
+</style>
+<hr>
+<br><br>
+</p>
+
+<p style="font-family: arial; font-size:150%; text-align: center;">
+<b>Light Sensor (BH1750) Readings</b> <br><br>
+
+<iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2149974/charts/1?bgcolor=%23ffffff&amp;color=%235370fd&amp;dynamic=true&amp;results=60&amp;title=Light+level&amp;type=line&amp;xaxis=Time&amp;yaxis=Lux"></iframe>
+<br><br>
+</p>
+
+<p style="font-family: arial; font-size:150%; text-align: center;">
+<b>Light Sensor (BH1750) Indicators</b> <br>
+<span style="font-size: 80%;"><strong>Legend: </strong><br>
+1. Light System: 0 (off), 1 (on) <br>
+</span>
+<br>
+
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676179"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676180"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676181"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676182"></iframe>
+<br>
+
+<br><br>
+<style>
+hr {color: white; border-style: solid;}
+</style>
+<hr>
+<br><br>
+</p>
+
+
+<p style="font-family: arial; font-size:150%; text-align: center;">
+<b>Temperature and Humidity Sensor (AM2320) Readings</b> <br><br>
+
+<iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/charts/1?bgcolor=%23ffffff&color=%23f40600&dynamic=true&results=60&title=Temperature&type=line&yaxis=Degree+Celcius"></iframe>
+<iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/charts/2?bgcolor=%23ffffff&color=%23f40600&dynamic=true&results=60&title=Humidity&type=line&yaxis=%25+Relative+Humidity"></iframe>
+<br><br>
+</p>
+
+<p style="font-family: arial; font-size:150%; text-align: center;">
+<b>Temperature and Humidity Sensor (AM2320) Indicators</b> <br>
+<span style="font-size: 80%;"><strong>Legend: </strong><br>
+1. Direct Fan: 0 (off), 1 (direct), 2 (oscillating) <br>
+2. Ceiling Fan: 0 (off), 1 (CW, circulates warm air), 2 (CC, pushes cool air) <br>
+3. Humidity Tray: 0 (off), 1 (drain), 2 (pump) <br>
+4. Moisture Absorber Tray: 0 (close), 1 (open) <br>
+</span>
+<br>
+
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676179"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676180"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676181"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676182"></iframe>
+
+
+<!-- Get data from thingspeak -->
+<br><br><br>
+<strong>Implications: </strong> <br>
+Current Temperature: <span id="field1"></span> degree Celcius <br>
+Current Humidity: <span id="field2"></span> % Relative Humidity <br>
+<span id="tempimply"></span> <br>
+<span id="humidimply"></span> <br>
+
+
+<script>
+<!-- Make an HTTP GET request to ThingSpeak API -->
+fetch('https://api.thingspeak.com/channels/2166518/feeds.json?results=1')
+  .then(response => response.json())
+  .then(data => {
+    <!-- Extract the latest readings from the response -->
+    const latestReadingField1 = data.feeds[0].field1;
+    const latestReadingField2 = data.feeds[0].field2;
+        
+    <!-- Display the latest readings on the HTML page -->
+    document.getElementById('field1').textContent = latestReadingField1;
+    document.getElementById('field2').textContent = latestReadingField2;
+
+    <!-- Check Time -->
+    const tempimply = document.getElementById('tempimply');
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    <!-- Conditions, converted F to C -->
+    if ((parseFloat(latestReadingField1) < 18.333333) && ((currentHour >= 18 && currentHour <= 24) || currentHour < 6)) {
+      tempimply.innerHTML = '<span style="color: #5370fd;"><strong>THE TEMPERATURE IS TOO LOW!</strong></span>' }
+    else if ((parseFloat(latestReadingField1) > 18.333333) && ((currentHour >= 18 && currentHour <= 24) || currentHour < 6)) {
+      tempimply.innerHTML = '<span style="color: #f40600;"><strong>THE TEMPERATURE IS TOO HIGH!</strong></span>' }
+    else if ((parseFloat(latestReadingField1) == 18.333333) && ((currentHour >= 18 && currentHour <= 24) || currentHour < 6)) {
+      tempimply.innerHTML = '<span style="color: black;"><strong>The temperature is just right.</strong></span>' }
+    else if ((parseFloat(latestReadingField1) < 23.888889) && (currentHour >= 6 && currentHour < 18)) {
+      tempimply.innerHTML = '<span style="color: #5370fd;"><strong>THE TEMPERATURE IS TOO LOW!</strong></span>' }
+    else if ((parseFloat(latestReadingField1) > 23.888889) && (currentHour >= 6 && currentHour < 18)) {
+      tempimply.innerHTML = '<span style="color: #f40600;"><strong>THE TEMPERATURE IS TOO HIGH!</strong></span>' }
+    else if ((parseFloat(latestReadingField1) == 23.888889) && (currentHour >= 6 && currentHour < 18)) {
+      tempimply.innerHTML = '<span style="color: black;"><strong>The temperature is just right.</strong></span>' }
+
+    <!-- Conditions2 -->
+    if (parseFloat(latestReadingField2) < 25) {
+      humidimply.innerHTML = '<span style="color: #5370fd;"><strong>THE HUMIDITY IS TOO LOW!</strong></span>' }
+    else if (parseFloat(latestReadingField2) > 49) {
+      humidimply.innerHTML = '<span style="color: #f40600;"><strong>THE HUMIDITY IS TOO HIGH!</strong></span>' }
+    else {
+      humidimply.innerHTML = '<span style="color: black;"><strong>The humidity is just right.</strong></span>' }
+
+  })
+  .catch(error => console.error(error));
+</script>
+
+
+<br><br>
+<style>
+hr {color: white; border-style: solid;}
+</style>
+<hr>
+<br><br>
+</p>
+
+
+<p style="font-family: arial; font-size:150%; text-align: center;">
+<b>Air Quality Sensor (SGP30) Readings</b> <br><br>
+
+<iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2203260/charts/1?bgcolor=%23ffffff&color=%23508C46&dynamic=true&results=60&title=CO2+Reading&type=line&yaxis=CO2+[ppm]"></iframe>
+<iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2203260/charts/2?bgcolor=%23ffffff&color=%23508C46&dynamic=true&results=60&title=TVOC+Reading&type=line&yaxis=TVOC+[ppb]"></iframe>
+<br><br>
+</p>
+
+<p style="font-family: arial; font-size:150%; text-align: center;">
+<b>Air Quality Sensor (SGP30) Indicators</b> <br>
+<span style="font-size: 80%;"><strong>Legend: </strong><br>
+1. Light System: 0 (off), 1 (on) <br>
+</span>
+<br>
+
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676179"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676180"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676181"></iframe>
+<iframe width="260" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2166518/widgets/676182"></iframe>
+<br>
+
+<br><br>
+<style>
+hr {color: white; border-style: solid;}
+</style>
+<hr>
+<br><br>
+</p>
+
+<p style="font-family: arial; font-size: 120%; text-align: center;">
+<br>
+<strong>About:</strong> An indoor plant monitoring application that tracks plant health, state solutions, and measure effects on close environment. Used AM2320, BH1750, and SGP30 sensors, ESP8266 Wi-Fi Modules, STM32F411RE as master, and Thingspeak as server. Chose <i>Epipremnum aureum</i> (Golden Pothos) as it has the most positive effects on indoor environment.
+<br><br>
+(c) John Danielle Castor (jtcastor1@up.edu.ph), Airick Miguel Reyes-Gonzales (agonzales2@up.edu.ph), Zylm Sabater (@up.edu.ph); June 25, 2023<br>
+<br><br>
+</p>
+
+
+</body>
+</html>
